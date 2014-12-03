@@ -121,9 +121,9 @@ public class Driver {
      
    }
 
-   public static void assertLessThan(Integer start, Integer end, int exonNum) throws InitException {
+   public static void assertLessThan(Integer start, Integer end, String s1, String s2) throws InitException {
       if (start >= end)
-         throw new InitException(String.format("Exon %d start must be greater than exon %d end\n", exonNum, exonNum));
+         throw new InitException(String.format("%s must be greater than %s\n", s2, s1));
    }
 
    public static void assertValidInput(int fastaLength, int inputVal, String badParam) throws InitException {
@@ -143,9 +143,7 @@ public class Driver {
                JOptionPane.showMessageDialog(null, "Provide a FASTA file before running");
             } else {
                playSound("money");
-
                try {
-
                   Integer intronLengthValue = (Integer)intronLength.getSpinnerVal(),
                           exonLengthValue = (Integer)exonLength.getSpinnerVal();
                   Integer exon1StartValue = (Integer)exon1Start.getSpinnerVal(),
@@ -153,8 +151,9 @@ public class Driver {
                           exon2StartValue = (Integer)exon2Start.getSpinnerVal(),
                           exon2EndValue = (Integer)exon2End.getSpinnerVal();
 
-                  assertLessThan(exon1StartValue, exon1EndValue, 1);
-                  assertLessThan(exon2StartValue, exon2EndValue, 2);
+                  assertLessThan(exon1StartValue, exon1EndValue, "exon 1 start", "exon 1 end");
+                  assertLessThan(exon2StartValue, exon2EndValue, "exon 2 start", "exon 2 end");
+                  assertLessThan(exon1EndValue, exon2StartValue, "exon 1 end", "exon 2 start");
 
                   String outputFile = getFileName(uploadFastaLabel.getText());
                   outputFile = outputFile.substring(0, outputFile.lastIndexOf('.')) + ".csv";
