@@ -18,7 +18,7 @@ public class Driver {
    }
 
    public static SpinnerNumberModel getUIntSpinModel(int minVal){
-      return new SpinnerNumberModel(minVal, 0, MAX_INT_SIZE, 1);
+      return new SpinnerNumberModel(minVal, 1, MAX_INT_SIZE, 1);
    }
 
    private static class LabelAndSpinner {
@@ -47,9 +47,6 @@ public class Driver {
    public static ImageIcon hkWinkBackground = new ImageIcon("backgroundWink.jpg");
 
    public static JLabel background = new JLabel(hkBackground);
-
-   public static JLabel queryLabel = new JLabel("Query: ");
-   public static JTextField queryInput = new JTextField("", 12);
 
    public static LabelAndSpinner exon1Start = 
     new LabelAndSpinner("Exon 1 start position: ", new JSpinner(getUIntSpinModel(1)));
@@ -124,13 +121,14 @@ public class Driver {
      
    }
 
-   public static boolean isValidQuery(String query){
-      for(int i = 0; i < query.length(); i++) {
-         Character c = Character.toUpperCase(query.charAt(i));
-         if(!(c == 'G' || c == 'C' || c == 'T' || c == 'A' || c == 'R' || c == 'Y' || c == 'W' || c == 'S' || c == 'M' || c == 'K' || c == 'H' || c == 'B' || c == 'V' || c == 'D' || c == 'N'))
-            return false;
-      }
-      return true;     
+   public static void assertLessThan(Integer start, Integer end, int exonNum) throws InitException {
+      if (start >= end)
+         throw new InitException(String.format("Exon %d start must be greater than exon %d end\n", exonNum, exonNum));
+   }
+
+   public static void assertValidInput(int fastaLength, int inputVal, String badParam) throws InitException {
+      if (fastaLength < inputVal)
+         throw new InitException(badParam + " cannot be greater than the length of the FASTA\n");
    }
 
    public static ActionListener handleClick = new ActionListener() {
@@ -148,11 +146,16 @@ public class Driver {
 
                try {
 
-                  if(!isValidQuery(queryInput.getText())){
-                     JOptionPane.showMessageDialog(null, "Invalid query: " + queryInput.getText());
-                     return;
-                  }
-                  
+                  Integer intronLengthValue = (Integer)intronLength.getSpinnerVal(),
+                          exonLengthValue = (Integer)exonLength.getSpinnerVal();
+                  Integer exon1StartValue = (Integer)exon1Start.getSpinnerVal(),
+                          exon1EndValue = (Integer)exon1End.getSpinnerVal(),
+                          exon2StartValue = (Integer)exon2Start.getSpinnerVal(),
+                          exon2EndValue = (Integer)exon2End.getSpinnerVal();
+
+                  assertLessThan(exon1StartValue, exon1EndValue, 1);
+                  assertLessThan(exon2StartValue, exon2EndValue, 2);
+
                   String outputFile = getFileName(uploadFastaLabel.getText());
                   outputFile = outputFile.substring(0, outputFile.lastIndexOf('.')) + ".csv";
 
@@ -164,11 +167,17 @@ public class Driver {
                                              (Double)percentIT.getSpinnerVal(), 
                                              (Double)percentIG.getSpinnerVal(), 
                                              (Double)percentIC.getSpinnerVal());
-                  Integer intronLengthValue = (Integer)intronLength.getSpinnerVal(),
-                          exonLengthValue = (Integer)exonLength.getSpinnerVal();
-                  Integer exon1EndValue = (Integer)exon1End.getSpinnerVal(),
-                          exon2StartValue = (Integer)exon2Start.getSpinnerVal();
                   
+                  String fastaContents = getFileName(uploadFastaLabel.getText());
+
+                  int fastaLength = fastaContents.length();
+                  assertValidInput(fastaLength, exon1StartValue, "exon 1 start position");
+                  assertValidInput(fastaLength, exon1EndValue, "exon 1 end position");
+                  assertValidInput(fastaLength, exon2StartValue, "exon 2 start position");
+                  assertValidInput(fastaLength, exon2EndValue, "exon 2 end position");
+                  assertValidInput(fastaLength, intronLengthValue, "intron length");
+                  assertValidInput(fastaLength, exonLengthValue, "exon length");
+
                   /*TODO: NIGGI use the above values in your method below */
                   //FileDump.dumpHiddenExons(outputFile, ARRAYLIST_OF_HIDDENEXON_HERE);
 
