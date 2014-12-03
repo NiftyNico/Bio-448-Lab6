@@ -17,22 +17,19 @@ public class Odds {
       return c;
    }
 
-   private void throwLessThanInitException(String var) throws InitException {
-      throw new InitException(var + " cannot be less than 0\n");
+   private void assertZeroOrGreater(String var, double val) throws InitException {
+      if(val < -0.00000000001f)
+         throw new InitException(var + " cannot be less than 0\n");
    }
 
    public Odds(double a, double t, double g, double c) throws InitException {
       double sum = a + t + g + c;
-      if(sum <= 0.999999f && sum >= 1.000001f)
+      if(sum <= 0.999999f || sum >= 1.000001f)
          throw new InitException("A, T, G, and C must add to 1.0, they currently add to " + sum);
-      if(a < 0.0f)
-         throwLessThanInitException("A");
-      if(t < 0.0f)
-         throwLessThanInitException("T");
-      if(g < 0.0f)
-         throwLessThanInitException("G");
-      if(c < 0.0f)
-         throwLessThanInitException("C");
+      assertZeroOrGreater("A", a);
+      assertZeroOrGreater("T", t);
+      assertZeroOrGreater("G", g);
+      assertZeroOrGreater("C", c);
 
       this.a = a;
       this.t = t;
