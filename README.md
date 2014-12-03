@@ -11,6 +11,8 @@ Harry SINGH
 JULIE Weise
 Shereen CHEW
 
+Setup
+---------------------------------------------------
 Extract the zip to a directory on your computer.
 Inside of where you extracted the files, double click "Lab6.jar".
 If a security warning pops up, right click to open and dismiss any security warnings while opening.
@@ -37,9 +39,13 @@ Percent G in intron: Percentage between 0 and 1 associated for encountering a "G
 Percent C in intron: Percentage between 0 and 1 associated for encountering a "C" inside an intron
 Note: Percentages of A, T, G, and C must add up to 1.0
 
+Upload Fasta
+---------------------------------------------------
 Upload the FASTA file by clicking the "Upload FASTA" button.
 Select the FASTA file in the file browser that appears. 
 
+Run
+---------------------------------------------------
 Click "Run" to learn about the query on the provided FASTA file.
 
 Note: When running, make sure to close any existing CSV files that were previously generated otherwise the CSV runs a risk of not being generated properly.
