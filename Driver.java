@@ -178,7 +178,12 @@ public class Driver {
                   assertValidInput(fastaLength, exonLengthValue, "exon length");
 
                   /*TODO: NIGGI use the above values in your method below */
-                  //FileDump.dumpHiddenExons(outputFile, ARRAYLIST_OF_HIDDENEXON_HERE);
+                  
+                  HiddenMarkovModel hmm = new HiddenMarkovModel(intronLengthValue, exonLengthValue, (Double)percentEA.getSpinnerVal(), (Double)percentET.getSpinnerVal(), (Double)percentEG.getSpinnerVal(), (Double)percentEC.getSpinnerVal(), (Double)percentIA.getSpinnerVal(), (Double)percentIT.getSpinnerVal(), (Double)percentIG.getSpinnerVal(), (Double)percentIC.getSpinnerVal(), exon1EndValue, exon2StartValue, uploadFastaLabel.getText());
+                  
+                  hmm.findHiddenExons();
+                  
+                  //FileDump.dumpHiddenExons(outputFile, hmm.findHiddenExons());
 
                   try {
                      Desktop.getDesktop().open(Paths.get(outputFile).toFile());
